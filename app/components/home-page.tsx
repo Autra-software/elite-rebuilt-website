@@ -3,7 +3,7 @@ import type { Dict } from "../i18n/en";
 import { site } from "../site";
 import { BookingForm } from "./booking-form";
 import { PendingTag, SHOW_PENDING, visible } from "./pending";
-import { Photo, photoExists, type PhotoKey } from "./photo";
+import { Photo, slotHasImage, type PhotoKey } from "./photo";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 
@@ -31,8 +31,8 @@ export function HomePage({ t }: { t: Dict }) {
   const bringItems = visible(t.bring.items);
   const showBring = bringItems.length > 0;
   const faqItems = visible(t.faq.items);
-  const photoKeys: PhotoKey[] = ["front", "bay", "inspector", "waiting"];
-  const showOffice = SHOW_PENDING || photoKeys.some(photoExists);
+  const photoKeys: PhotoKey[] = ["front", "bay", "vin", "paperwork"];
+  const showOffice = SHOW_PENDING || photoKeys.some(slotHasImage);
   const a = site.address;
 
   return (
@@ -205,19 +205,21 @@ export function HomePage({ t }: { t: Dict }) {
                   photo="front"
                   alt={t.office.photos.front.alt}
                   label={t.office.photos.front.label}
+                  illustrationText={t.illustration}
                   placeholderText={t.photoPlaceholder}
                   sizes="(min-width: 1024px) 560px, (min-width: 640px) 50vw, 100vw"
                   className="aspect-[4/3] sm:col-span-2 lg:row-span-2 lg:aspect-auto lg:min-h-[26rem]"
                 />
-                {(["bay", "inspector", "waiting"] as const).map((key) => (
+                {(["bay", "vin", "paperwork"] as const).map((key) => (
                   <Photo
                     key={key}
                     photo={key}
                     alt={t.office.photos[key].alt}
                     label={t.office.photos[key].label}
+                    illustrationText={t.illustration}
                     placeholderText={t.photoPlaceholder}
                     sizes="(min-width: 1024px) 280px, (min-width: 640px) 50vw, 100vw"
-                    className={`aspect-[4/3] ${key === "waiting" ? "lg:col-span-2 lg:aspect-auto" : ""}`}
+                    className={`aspect-[4/3] ${key === "paperwork" ? "lg:col-span-2 lg:aspect-auto" : ""}`}
                   />
                 ))}
               </div>

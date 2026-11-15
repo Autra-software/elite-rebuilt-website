@@ -99,12 +99,12 @@ export const en = {
 
   office: {
     title: "Our Miami office",
-    body: "Unit 22 at 19100 SW 106 Ave, with space to inspect your vehicle on site.",
+    body: "Unit 22 at 19100 SW 106 Ave, Miami, FL 33157.",
     photos: {
       front: { alt: "Front of the Elite Rebuilt Inspections office", label: "Office front" },
       bay: { alt: "Vehicle inspection area", label: "Inspection area" },
-      inspector: { alt: "Inspector checking a vehicle", label: "Inspector at work" },
-      waiting: { alt: "Customer waiting area", label: "Waiting area" },
+      vin: { alt: "Checking a vehicle identification number", label: "VIN check" },
+      paperwork: { alt: "Vehicle title and parts receipts", label: "Title and paperwork" },
     },
   },
 
@@ -187,6 +187,7 @@ export const en = {
 
   pending: "Needs confirmation",
   photoPlaceholder: "Photo placeholder",
+  illustration: "Illustration",
 };
 
 export type Dict = typeof en;

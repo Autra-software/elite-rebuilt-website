@@ -100,12 +100,12 @@ export const es: Dict = {
 
   office: {
     title: "Nuestra oficina en Miami",
-    body: "Unidad 22 en 19100 SW 106 Ave, con espacio para inspeccionar su vehículo en el lugar.",
+    body: "Unidad 22 en 19100 SW 106 Ave, Miami, FL 33157.",
     photos: {
       front: { alt: "Fachada de la oficina de Elite Rebuilt Inspections", label: "Fachada de la oficina" },
       bay: { alt: "Área de inspección de vehículos", label: "Área de inspección" },
-      inspector: { alt: "Inspector revisando un vehículo", label: "Inspector trabajando" },
-      waiting: { alt: "Área de espera para clientes", label: "Área de espera" },
+      vin: { alt: "Verificación del número de identificación del vehículo", label: "Verificación del VIN" },
+      paperwork: { alt: "Título del vehículo y recibos de piezas", label: "Título y documentos" },
     },
   },
 
@@ -188,4 +188,5 @@ export const es: Dict = {
 
   pending: "Por confirmar",
   photoPlaceholder: "Espacio para foto",
+  illustration: "Ilustración",
 };
