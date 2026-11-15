@@ -48,12 +48,16 @@ export function SiteHeader({ t, showBring }: { t: Dict; showBring: boolean }) {
           </ul>
         </nav>
 
-        <div className="ml-auto flex items-center gap-4 lg:ml-0">
+        <div className="ml-auto flex items-center gap-3 md:gap-4 lg:ml-0">
           <a
             href={`tel:${site.phone}`}
-            className="hidden font-display text-lg font-bold tracking-tight md:inline"
+            aria-label={t.hero.secondary}
+            className="inline-flex items-center gap-2 rounded-md border-2 border-ink px-2.5 py-1.5 font-display text-base font-bold tracking-tight transition-colors hover:bg-ink hover:text-white md:px-3.5"
           >
-            {site.phoneDisplay}
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 shrink-0" fill="currentColor">
+              <path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25c1.13.37 2.33.57 3.6.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1L6.6 10.8Z" />
+            </svg>
+            <span className="hidden md:inline">{site.phoneDisplay}</span>
           </a>
           <Link
             href={t.nav.switchHref}
