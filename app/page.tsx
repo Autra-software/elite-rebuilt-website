@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 
 type DayOption = {
   value: string;
@@ -71,8 +71,31 @@ function buildTimeOptions(dayOfWeek: number | null): TimeOption[] {
   return options;
 }
 
+// True only in the browser. The date list depends on "today", so it must not
+// be baked into the static HTML at build time.
+const subscribe = () => () => {};
+function useIsClient() {
+  return useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false,
+  );
+}
+
+function RequiredMark() {
+  return (
+    <span aria-hidden="true" className="text-red-700">
+      {" "}*
+    </span>
+  );
+}
+
 export default function Home() {
-  const availableDays = useMemo(() => buildAvailableDays(), []);
+  const isClient = useIsClient();
+  const availableDays = useMemo(
+    () => (isClient ? buildAvailableDays() : []),
+    [isClient],
+  );
   const [preferredDate, setPreferredDate] = useState("");
   const [preferredTime, setPreferredTime] = useState("");
 
@@ -219,9 +242,9 @@ export default function Home() {
 
       <section className="mx-auto max-w-3xl px-6 py-10 md:py-14">
         <div className="text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-lime-600 md:text-sm">
+          <h2 className="text-xs font-semibold uppercase tracking-[0.28em] text-lime-600 md:text-sm">
             How It Works
-          </p>
+          </h2>
         </div>
 
         <div className="mt-8 space-y-10">
@@ -290,17 +313,22 @@ export default function Home() {
           method="POST"
           className="mt-10 space-y-5"
         >
+          <p className="text-sm text-slate-600">
+            Fields marked <span className="text-red-700">*</span> are required.
+          </p>
           <div>
             <label
               htmlFor="fullName"
               className="mb-2 block text-sm font-medium text-slate-800"
             >
               Full Name
+              <RequiredMark />
             </label>
             <input
               id="fullName"
               name="fullName"
               type="text"
+              autoComplete="name"
               placeholder="Enter your full name"
               className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-500"
               required
@@ -313,11 +341,13 @@ export default function Home() {
               className="mb-2 block text-sm font-medium text-slate-800"
             >
               Phone Number
+              <RequiredMark />
             </label>
             <input
               id="phone"
               name="phone"
               type="tel"
+              autoComplete="tel"
               placeholder="Enter your phone number"
               className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-500"
               required
@@ -330,11 +360,13 @@ export default function Home() {
               className="mb-2 block text-sm font-medium text-slate-800"
             >
               Email
+              <RequiredMark />
             </label>
             <input
               id="email"
               name="email"
               type="email"
+              autoComplete="email"
               placeholder="Enter your email"
               className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-500"
               required
@@ -347,12 +379,17 @@ export default function Home() {
               className="mb-2 block text-sm font-medium text-slate-800"
             >
               VIN Number
+              <RequiredMark />
             </label>
             <input
               id="vin"
               name="vin"
               type="text"
               placeholder="Enter the VIN number"
+              minLength={17}
+              maxLength={17}
+              pattern="[A-HJ-NPR-Za-hj-npr-z0-9]{17}"
+              title="17 characters, letters and numbers (no I, O or Q)"
               className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3.5 text-sm uppercase text-slate-900 outline-none transition placeholder:normal-case placeholder:text-slate-400 focus:border-slate-500"
               required
             />
@@ -364,6 +401,7 @@ export default function Home() {
               className="mb-2 block text-sm font-medium text-slate-800"
             >
               Preferred Day
+              <RequiredMark />
             </label>
             <select
               id="preferredDate"
@@ -373,10 +411,13 @@ export default function Home() {
                 setPreferredDate(e.target.value);
                 setPreferredTime("");
               }}
-              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3.5 text-sm text-slate-900 outline-none transition focus:border-slate-500"
+              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3.5 text-sm text-slate-900 outline-none transition focus:border-slate-500 disabled:bg-slate-100 disabled:text-slate-400"
+              disabled={!isClient}
               required
             >
-              <option value="">Select an available day</option>
+              <option value="">
+                {isClient ? "Select an available day" : "Loading dates…"}
+              </option>
               {availableDays.map((day) => (
                 <option key={day.value} value={day.value}>
                   {day.label}
@@ -391,6 +432,7 @@ export default function Home() {
               className="mb-2 block text-sm font-medium text-slate-800"
             >
               Preferred Time
+              <RequiredMark />
             </label>
             <select
               id="preferredTime"
@@ -433,6 +475,10 @@ export default function Home() {
             >
               Submit Inspection Request
             </button>
+            <p className="mt-3 text-center text-xs leading-5 text-slate-600">
+              By submitting, you agree to be contacted by phone, text or email
+              about your inspection.
+            </p>
           </div>
         </form>
       </section>
