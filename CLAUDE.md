@@ -2,6 +2,7 @@
 
 Next.js 16 (App Router), React 19, Tailwind CSS 4. Live site: https://www.eliterebuilt.com
 Inspection request form posts to Formspree.
+English at `/`, Spanish at `/es`; all text in `app/i18n/en.ts` and `es.ts` (keep both in sync). Unconfirmed facts use `pending: true` and are hidden in production.
 
 ## Working rules
 - Always plan before coding. Present the plan and wait for the user's explicit approval before changing any code.
