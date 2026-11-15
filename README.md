@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Elite Rebuilt Inspections website
 
-## Getting Started
+Website for Elite Rebuilt Inspections, an FLHSMV-certified rebuilt title inspection office in Miami.
+Live site: https://www.eliterebuilt.com
 
-First, run the development server:
+Built with Next.js 16 (App Router), React 19 and Tailwind CSS 4.
+The inspection request form posts to Formspree.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Run locally
+
+Requirements: Node.js 20.9 or newer (22 LTS recommended).
+
+```powershell
+npm ci          # install exact dependency versions from package-lock.json
+npm run dev     # development server with hot reload
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To check the production build before pushing:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```powershell
+npm run lint
+npm run build
+npm run start   # serves the production build at http://localhost:3000
+```
 
-## Learn More
+Useful URLs to check locally:
 
-To learn more about Next.js, take a look at the following resources:
+- http://localhost:3000/sitemap.xml
+- http://localhost:3000/robots.txt
+- View the page source and search for `application/ld+json` to see the business details Google reads.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project layout
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `app/page.tsx`: the home page and inspection request form
+- `app/layout.tsx`: page title, description and sharing tags
+- `app/site.ts`: business name, phone, address and site URL in one place
+- `app/structured-data.tsx`: business details for search engines (JSON-LD)
+- `app/sitemap.ts`, `app/robots.ts`: generated `/sitemap.xml` and `/robots.txt`
+- `public/images/`: logos and photos
 
-## Deploy on Vercel
+## Working with Claude Code
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See `CLAUDE.md` for the project's working rules. The codebase graph is built with `graphify .` (output in `graphify-out/`, not committed).
