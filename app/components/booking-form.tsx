@@ -1,64 +1,11 @@
 "use client";
 
-import { useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useRef, useState, useSyncExternalStore, type FormEvent } from "react";
 import type { Dict } from "../i18n/en";
+import { AppointmentPicker } from "./appointment-picker";
 import { checkVin, decodeVin, describeVehicle, normalizeVin, type VinCheck, type VinVehicle } from "../lib/vin";
 
-type DayOption = { value: string; label: string; dayOfWeek: number };
-type TimeOption = { value: string; label: string };
-
-function formatDateValue(date: Date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-function buildAvailableDays(dateLocale: string, totalDays = 45): DayOption[] {
-  const options: DayOption[] = [];
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  for (let i = 0; i < totalDays; i += 1) {
-    const date = new Date(today);
-    date.setDate(today.getDate() + i);
-    const dayOfWeek = date.getDay();
-    if (dayOfWeek === 0) continue; // closed Sunday
-
-    const label = date.toLocaleDateString(dateLocale, {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    });
-    options.push({
-      value: formatDateValue(date),
-      label: label.charAt(0).toUpperCase() + label.slice(1),
-      dayOfWeek,
-    });
-  }
-  return options;
-}
-
-function buildTimeOptions(dayOfWeek: number | null, dateLocale: string): TimeOption[] {
-  if (dayOfWeek === null) return [];
-  const startHour = dayOfWeek === 6 ? 10 : 9;
-  const endHour = dayOfWeek === 6 ? 15 : 17;
-  const options: TimeOption[] = [];
-
-  for (let hour = startHour; hour <= endHour; hour += 1) {
-    options.push({
-      value: `${String(hour).padStart(2, "0")}:00`,
-      label: new Date(2000, 0, 1, hour).toLocaleTimeString(dateLocale, {
-        hour: "numeric",
-        minute: "2-digit",
-      }),
-    });
-  }
-  return options;
-}
-
-// True only in the browser. The date list depends on "today", so it must not
+// True only in the browser. The calendar depends on "today", so it must not
 // be baked into the static HTML at build time.
 const subscribe = () => () => {};
 function useIsClient() {
@@ -83,12 +30,23 @@ function Required() {
 
 export function BookingForm({ t, dateLocale }: { t: Dict["request"]; dateLocale: string }) {
   const isClient = useIsClient();
-  const availableDays = useMemo(
-    () => (isClient ? buildAvailableDays(dateLocale) : []),
-    [isClient, dateLocale],
-  );
   const [preferredDate, setPreferredDate] = useState("");
   const [preferredTime, setPreferredTime] = useState("");
+  const [dayError, setDayError] = useState(false);
+  const [timeError, setTimeError] = useState(false);
+
+  // Runs after the browser's own checks pass. Day and time are custom controls,
+  // so they are checked here.
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    if (preferredDate && preferredTime) return;
+    e.preventDefault();
+    setDayError(!preferredDate);
+    setTimeError(!preferredTime);
+    const target = !preferredDate
+      ? document.querySelector<HTMLElement>("#appointment-day .rdp-day_button:not([disabled])")
+      : document.querySelector<HTMLElement>('input[name="preferredTime"]');
+    target?.focus();
+  }
 
   // VIN: checked when the field loses focus. Warnings never block submission.
   const [vin, setVin] = useState("");
@@ -137,14 +95,13 @@ export function BookingForm({ t, dateLocale }: { t: Dict["request"]; dateLocale:
               ? { tone: "ok", text: t.vinOk }
               : null;
 
-  const selectedDay = availableDays.find((day) => day.value === preferredDate);
-  const timeOptions = useMemo(
-    () => buildTimeOptions(selectedDay?.dayOfWeek ?? null, dateLocale),
-    [selectedDay, dateLocale],
-  );
-
   return (
-    <form action="https://formspree.io/f/xojyyqjb" method="POST" className="space-y-5">
+    <form
+      action="https://formspree.io/f/xojyyqjb"
+      method="POST"
+      onSubmit={handleSubmit}
+      className="space-y-5"
+    >
       <p className="text-sm text-steel">{t.requiredNote}</p>
 
       <div className="grid gap-5 sm:grid-cols-2">
@@ -254,54 +211,28 @@ export function BookingForm({ t, dateLocale }: { t: Dict["request"]; dateLocale:
           </p>
         </div>
 
-        <div>
-          <label htmlFor="preferredDate" className={labelClass}>
-            {t.day}
-            <Required />
-          </label>
-          <select
-            id="preferredDate"
-            name="preferredDate"
-            value={preferredDate}
-            onChange={(e) => {
-              setPreferredDate(e.target.value);
-              setPreferredTime("");
+        {isClient ? (
+          <AppointmentPicker
+            t={t}
+            dateLocale={dateLocale}
+            date={preferredDate}
+            time={preferredTime}
+            onDateChange={(value) => {
+              setPreferredDate(value);
+              setDayError(false);
             }}
-            className={fieldClass}
-            disabled={!isClient}
-            required
-          >
-            <option value="">{isClient ? t.selectDay : t.loadingDates}</option>
-            {availableDays.map((day) => (
-              <option key={day.value} value={day.value}>
-                {day.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label htmlFor="preferredTime" className={labelClass}>
-            {t.time}
-            <Required />
-          </label>
-          <select
-            id="preferredTime"
-            name="preferredTime"
-            value={preferredTime}
-            onChange={(e) => setPreferredTime(e.target.value)}
-            className={fieldClass}
-            disabled={!preferredDate}
-            required
-          >
-            <option value="">{preferredDate ? t.selectTime : t.selectDayFirst}</option>
-            {timeOptions.map((time) => (
-              <option key={time.value} value={time.value}>
-                {time.label}
-              </option>
-            ))}
-          </select>
-        </div>
+            onTimeChange={(value) => {
+              setPreferredTime(value);
+              if (value) setTimeError(false);
+            }}
+            dayError={dayError}
+            timeError={timeError}
+          />
+        ) : (
+          <p className="rounded-md border border-dashed border-field bg-mist p-4 text-sm text-steel sm:col-span-2">
+            {t.loadingDates}
+          </p>
+        )}
       </div>
 
       <p className="text-sm text-steel">{t.hoursNote}</p>
