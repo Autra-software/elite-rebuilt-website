@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useMemo, useRef, useState, useSyncExternalStore } from "react";
 import type { Dict } from "../i18n/en";
+import { checkVin, decodeVin, describeVehicle, normalizeVin, type VinCheck, type VinVehicle } from "../lib/vin";
 
 type DayOption = { value: string; label: string; dayOfWeek: number };
 type TimeOption = { value: string; label: string };
@@ -89,6 +90,53 @@ export function BookingForm({ t, dateLocale }: { t: Dict["request"]; dateLocale:
   const [preferredDate, setPreferredDate] = useState("");
   const [preferredTime, setPreferredTime] = useState("");
 
+  // VIN: checked when the field loses focus. Warnings never block submission.
+  const [vin, setVin] = useState("");
+  const [vinCheck, setVinCheck] = useState<VinCheck>("empty");
+  const [vinLookup, setVinLookup] = useState<"idle" | "loading" | "done">("idle");
+  const [vehicle, setVehicle] = useState<VinVehicle | null>(null);
+  const lookupRef = useRef<AbortController | null>(null);
+  const checkedVinRef = useRef("");
+
+  async function validateVin() {
+    const value = normalizeVin(vin);
+    setVin(value);
+    if (value === checkedVinRef.current) return;
+    checkedVinRef.current = value;
+
+    lookupRef.current?.abort();
+    setVehicle(null);
+    const result = checkVin(value);
+    setVinCheck(result);
+    if (result === "empty" || result === "format") {
+      setVinLookup("idle");
+      return;
+    }
+
+    const controller = new AbortController();
+    lookupRef.current = controller;
+    const timeout = setTimeout(() => controller.abort(), 6000);
+    setVinLookup("loading");
+    const found = await decodeVin(value, controller.signal);
+    clearTimeout(timeout);
+    if (lookupRef.current !== controller) return; // a newer VIN was entered
+    setVehicle(found);
+    setVinLookup("done");
+  }
+
+  const vinMessage =
+    vinCheck === "format"
+      ? { tone: "warn", text: t.vinFormatWarning }
+      : vinCheck === "checkDigit"
+        ? { tone: "warn", text: t.vinCheckDigitWarning }
+        : vinCheck === "ok" && vinLookup === "loading"
+          ? { tone: "info", text: t.vinChecking }
+          : vinCheck === "ok" && vehicle
+            ? { tone: "ok", text: `${t.vinFound} ${describeVehicle(vehicle)}` }
+            : vinCheck === "ok" && vinLookup === "done"
+              ? { tone: "ok", text: t.vinOk }
+              : null;
+
   const selectedDay = availableDays.find((day) => day.value === preferredDate);
   const timeOptions = useMemo(
     () => buildTimeOptions(selectedDay?.dayOfWeek ?? null, dateLocale),
@@ -161,16 +209,48 @@ export function BookingForm({ t, dateLocale }: { t: Dict["request"]; dateLocale:
             autoCapitalize="characters"
             spellCheck={false}
             placeholder={t.vinPlaceholder}
-            minLength={17}
-            maxLength={17}
-            pattern="[A-HJ-NPR-Za-hj-npr-z0-9]{17}"
-            title={t.vinTitle}
-            aria-describedby="vin-help"
-            className={`${fieldClass} font-mono uppercase tracking-wider placeholder:font-sans placeholder:normal-case placeholder:tracking-normal`}
+            maxLength={20}
+            value={vin}
+            onChange={(e) => {
+              setVin(e.target.value.toUpperCase());
+              // Clear the previous result while the customer edits.
+              lookupRef.current?.abort();
+              lookupRef.current = null;
+              checkedVinRef.current = "";
+              setVinCheck("empty");
+              setVinLookup("idle");
+              setVehicle(null);
+            }}
+            onBlur={validateVin}
+            aria-describedby="vin-help vin-status"
+            aria-invalid={vinCheck === "format" || vinCheck === "checkDigit" ? true : undefined}
+            className={`${fieldClass} font-mono uppercase tracking-wider placeholder:font-sans placeholder:normal-case placeholder:tracking-normal ${
+              vinMessage?.tone === "warn" ? "border-amber-600!" : ""
+            } ${vinMessage?.tone === "ok" ? "border-emerald-700!" : ""}`}
             required
           />
           <p id="vin-help" className="mt-1.5 text-sm text-steel">
             {t.vinHelp}
+          </p>
+          <p
+            id="vin-status"
+            aria-live="polite"
+            className={`mt-1.5 flex items-start gap-2 text-sm font-semibold ${
+              vinMessage?.tone === "warn"
+                ? "text-amber-800"
+                : vinMessage?.tone === "ok"
+                  ? "text-emerald-800"
+                  : "text-steel"
+            }`}
+          >
+            {vinMessage && (
+              <>
+                <span aria-hidden="true">
+                  {vinMessage.tone === "warn" ? "⚠" : vinMessage.tone === "ok" ? "✓" : "…"}
+                </span>
+                <span>{vinMessage.text}</span>
+              </>
+            )}
           </p>
         </div>
 
@@ -228,6 +308,10 @@ export function BookingForm({ t, dateLocale }: { t: Dict["request"]; dateLocale:
 
       <input type="hidden" name="_subject" value={t.subject} />
       <input type="hidden" name="language" value={dateLocale} />
+      <input type="hidden" name="vinCheck" value={vinCheck} />
+      <input type="hidden" name="vehicleYear" value={vehicle?.year ?? ""} />
+      <input type="hidden" name="vehicleMake" value={vehicle?.make ?? ""} />
+      <input type="hidden" name="vehicleModel" value={vehicle?.model ?? ""} />
 
       <div>
         <button

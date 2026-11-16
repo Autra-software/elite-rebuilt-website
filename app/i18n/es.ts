@@ -121,7 +121,13 @@ export const es: Dict = {
     emailPlaceholder: "usted@ejemplo.com",
     vin: "VIN",
     vinPlaceholder: "17 caracteres",
-    vinTitle: "17 caracteres, letras y números (sin I, O ni Q)",
+    vinChecking: "Verificando el VIN…",
+    vinFound: "Vehículo encontrado:",
+    vinOk: "El formato del VIN es correcto.",
+    vinFormatWarning:
+      "Esto no parece un VIN estándar de 17 caracteres. Revíselo, por favor. Si su vehículo es anterior a 1981, puede enviar la solicitud de todos modos.",
+    vinCheckDigitWarning:
+      "Este VIN no pasa la verificación estándar. Revise si hay errores, como 0 y D u 8 y B. Puede enviar la solicitud de todos modos.",
     vinHelp: "Lo encuentra en el tablero del lado del conductor, en el marco de la puerta o en el título.",
     day: "Día preferido",
     time: "Hora preferida",

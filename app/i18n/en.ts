@@ -120,7 +120,13 @@ export const en = {
     emailPlaceholder: "you@example.com",
     vin: "VIN",
     vinPlaceholder: "17 characters",
-    vinTitle: "17 characters, letters and numbers (no I, O or Q)",
+    vinChecking: "Checking VIN…",
+    vinFound: "Vehicle found:",
+    vinOk: "VIN format looks correct.",
+    vinFormatWarning:
+      "This doesn't look like a standard 17-character VIN. Please double-check it. If your vehicle is from before 1981, you can still send the request.",
+    vinCheckDigitWarning:
+      "This VIN doesn't pass the standard check. Please look for typos, like 0 and D or 8 and B. You can still send the request.",
     vinHelp: "Find it on the driver's side of the dashboard, the door frame or the title.",
     day: "Preferred day",
     time: "Preferred time",
