@@ -99,13 +99,29 @@ export const es: Dict = {
   },
 
   office: {
-    title: "Nuestra oficina en Miami",
+    title: "Dentro de nuestra área de inspección",
     body: "Unidad 22 en 19100 SW 106 Ave, Miami, FL 33157.",
     photos: {
-      front: { alt: "Fachada de la oficina de Elite Rebuilt Inspections", label: "Fachada de la oficina" },
-      bay: { alt: "Área de inspección de vehículos", label: "Área de inspección" },
-      vin: { alt: "Verificación del número de identificación del vehículo", label: "Verificación del VIN" },
-      paperwork: { alt: "Título del vehículo y recibos de piezas", label: "Título y documentos" },
+      sign: {
+        alt: "Sedán blanco junto al letrero de Elite Rebuilt Inspections, certificados por el estado",
+        label: "Nuestro taller",
+      },
+      checking: {
+        alt: "Inspector revisando el marco de la puerta de un convertible azul",
+        label: "Inspección en curso",
+      },
+      clipboard: {
+        alt: "Inspector con una tablilla junto a un convertible en el área de inspección",
+        label: "Inspector",
+      },
+      engine: {
+        alt: "Honda Civic Type R blanco con el capó abierto para la inspección",
+        label: "Revisión del motor",
+      },
+      truck: {
+        alt: "Camioneta Chevrolet clásica morada en el área de inspección",
+        label: "Camioneta clásica",
+      },
     },
   },
 

@@ -4,26 +4,29 @@ import Image from "next/image";
 import { SHOW_PENDING } from "./pending";
 
 /*
-  Office image slots. Each slot shows, in order of preference:
-  1. a real photo, if public/images/photos/<file>.jpg exists
-  2. the matching illustration in public/images/illustrations/
+  Image slots for the inspection bay section. Each slot shows, in order:
+  1. its real photo in public/images/photos/
+  2. its illustration in public/images/illustrations/, if one is set
   3. a labelled placeholder (development only)
-  Drop a real photo in with the same name and it wins automatically.
 */
+type Slot = { photo: string; illustration?: string };
+
 export const photoSlots = {
-  front: { photo: "images/photos/office-front.jpg", illustration: "images/illustrations/office-front.svg" },
-  bay: { photo: "images/photos/inspection-area.jpg", illustration: "images/illustrations/inspection-area.svg" },
-  vin: { photo: "images/photos/vin-check.jpg", illustration: "images/illustrations/vin-check.svg" },
-  paperwork: { photo: "images/photos/paperwork.jpg", illustration: "images/illustrations/paperwork.svg" },
-} as const;
+  sign: { photo: "images/photos/shop-sign.jpg" },
+  checking: { photo: "images/photos/inspector-checking.jpg" },
+  clipboard: { photo: "images/photos/inspector-clipboard.jpg" },
+  engine: { photo: "images/photos/engine-check.jpg" },
+  truck: { photo: "images/photos/classic-truck.jpg" },
+} satisfies Record<string, Slot>;
 
 export type PhotoKey = keyof typeof photoSlots;
+const slotOf = (key: PhotoKey): Slot => photoSlots[key];
 
 const exists = (file: string) => fs.existsSync(path.join(process.cwd(), "public", file));
 
 export function slotHasImage(key: PhotoKey) {
-  const slot = photoSlots[key];
-  return exists(slot.photo) || exists(slot.illustration);
+  const slot = slotOf(key);
+  return exists(slot.photo) || (!!slot.illustration && exists(slot.illustration));
 }
 
 type PhotoProps = {
@@ -34,6 +37,7 @@ type PhotoProps = {
   placeholderText: string;
   sizes: string;
   className?: string;
+  position?: string;
 };
 
 export function Photo({
@@ -44,18 +48,26 @@ export function Photo({
   placeholderText,
   sizes,
   className = "",
+  position,
 }: PhotoProps) {
-  const slot = photoSlots[photo];
+  const slot = slotOf(photo);
 
   if (exists(slot.photo)) {
     return (
       <div className={`relative overflow-hidden rounded-lg bg-mist ${className}`}>
-        <Image src={`/${slot.photo}`} alt={alt} fill sizes={sizes} className="object-cover" />
+        <Image
+          src={`/${slot.photo}`}
+          alt={alt}
+          fill
+          sizes={sizes}
+          className="object-cover"
+          style={position ? { objectPosition: position } : undefined}
+        />
       </div>
     );
   }
 
-  if (exists(slot.illustration)) {
+  if (slot.illustration && exists(slot.illustration)) {
     return (
       <div className={`relative overflow-hidden rounded-lg border border-line bg-mist ${className}`}>
         <Image

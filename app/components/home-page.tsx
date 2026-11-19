@@ -27,12 +27,36 @@ function CheckIcon({ className = "" }: { className?: string }) {
   );
 }
 
+// Desktop: one full-width lead photo, then a staggered grid (wide, tall / tall, wide).
+type OfficePhoto = { key: PhotoKey; size: "full" | "wide" | "tall"; position?: string };
+const officePhotos: OfficePhoto[] = [
+  { key: "sign", size: "full", position: "center 52%" },
+  { key: "checking", size: "wide", position: "center 55%" },
+  { key: "clipboard", size: "tall" },
+  { key: "engine", size: "tall", position: "center 65%" },
+  { key: "truck", size: "wide", position: "center 60%" },
+];
+
+const photoLayout = {
+  full: {
+    sizes: "(min-width: 1152px) 1112px, 100vw",
+    className: "aspect-[4/3] sm:col-span-2 sm:aspect-[16/9] lg:col-span-3 lg:aspect-auto",
+  },
+  wide: {
+    sizes: "(min-width: 1152px) 740px, (min-width: 1024px) 66vw, 100vw",
+    className: "aspect-[4/3] sm:col-span-2 lg:aspect-auto",
+  },
+  tall: {
+    sizes: "(min-width: 1152px) 360px, (min-width: 640px) 50vw, 100vw",
+    className: "aspect-[3/4] lg:aspect-auto",
+  },
+};
+
 export function HomePage({ t }: { t: Dict }) {
   const bringItems = visible(t.bring.items);
   const showBring = bringItems.length > 0;
   const faqItems = visible(t.faq.items);
-  const photoKeys: PhotoKey[] = ["front", "bay", "vin", "paperwork"];
-  const showOffice = SHOW_PENDING || photoKeys.some(slotHasImage);
+  const showOffice = SHOW_PENDING || officePhotos.some(({ key }) => slotHasImage(key));
   const a = site.address;
 
   return (
@@ -192,7 +216,7 @@ export function HomePage({ t }: { t: Dict }) {
           </div>
         </section>
 
-        {/* Office photos (placeholders until real photos are added) */}
+        {/* Inspection bay photos */}
         {showOffice && (
           <section className="border-t border-line">
             <div className="mx-auto max-w-6xl px-5 py-14 md:py-20">
@@ -200,17 +224,8 @@ export function HomePage({ t }: { t: Dict }) {
                 <h2 className="font-display text-3xl font-bold tracking-tight">{t.office.title}</h2>
                 <p className="mt-3 text-lg leading-8 text-steel">{t.office.body}</p>
               </div>
-              <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2">
-                <Photo
-                  photo="front"
-                  alt={t.office.photos.front.alt}
-                  label={t.office.photos.front.label}
-                  illustrationText={t.illustration}
-                  placeholderText={t.photoPlaceholder}
-                  sizes="(min-width: 1024px) 560px, (min-width: 640px) 50vw, 100vw"
-                  className="aspect-[4/3] sm:col-span-2 lg:row-span-2 lg:aspect-auto lg:min-h-[26rem]"
-                />
-                {(["bay", "vin", "paperwork"] as const).map((key) => (
+              <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:auto-rows-[30rem] lg:grid-cols-3">
+                {officePhotos.map(({ key, size, position }) => (
                   <Photo
                     key={key}
                     photo={key}
@@ -218,8 +233,9 @@ export function HomePage({ t }: { t: Dict }) {
                     label={t.office.photos[key].label}
                     illustrationText={t.illustration}
                     placeholderText={t.photoPlaceholder}
-                    sizes="(min-width: 1024px) 280px, (min-width: 640px) 50vw, 100vw"
-                    className={`aspect-[4/3] ${key === "paperwork" ? "lg:col-span-2 lg:aspect-auto" : ""}`}
+                    position={position}
+                    sizes={photoLayout[size].sizes}
+                    className={photoLayout[size].className}
                   />
                 ))}
               </div>

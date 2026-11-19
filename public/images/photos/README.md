@@ -1,14 +1,20 @@
-# Office photos
+# Inspection bay photos
 
-Each image slot on the page shows an illustration from `public/images/illustrations/`
-until a real photo exists here. Drop a photo in with one of these exact file names and it
-replaces the illustration automatically (restart `npm run dev` if it doesn't show).
+These photos appear in the "Inside our inspection bay" section of the home page.
 
 | File | Shows | Shape |
 |---|---|---|
-| `office-front.jpg` | Front of the office | Large, landscape |
-| `inspection-area.jpg` | Where vehicles are inspected | Landscape (4:3) |
-| `vin-check.jpg` | Checking a vehicle's VIN | Landscape (4:3) |
-| `paperwork.jpg` | Title and paperwork at the counter | Wide landscape |
+| `shop-sign.jpg` | Car beside the Elite Rebuilt Inspections sign | Landscape (full-width lead) |
+| `inspector-checking.jpg` | Inspector checking a convertible's door frame | Landscape (wide slot) |
+| `inspector-clipboard.jpg` | Inspector with a clipboard in the bay | Portrait |
+| `engine-check.jpg` | Honda Civic Type R with the hood open | Portrait |
+| `classic-truck.jpg` | Classic Chevrolet pickup in the bay | Landscape (wide slot) |
 
-Tips: JPG, at least 1600 px wide, under 1 MB. Real photos of the office only; no stock photos.
+To replace one, save the new photo with the same file name. Before adding a photo:
+
+- Blur license plates and anything private.
+- Remove hidden photo data (location, camera details).
+- About 1600 px on the long side, under 300 KB.
+- Real photos of the office only; no stock photos.
+
+The original, unedited photos are kept in `photo-originals/` at the repo root, which is not committed.

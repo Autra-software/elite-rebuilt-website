@@ -98,13 +98,29 @@ export const en = {
   },
 
   office: {
-    title: "Our Miami office",
+    title: "Inside our inspection bay",
     body: "Unit 22 at 19100 SW 106 Ave, Miami, FL 33157.",
     photos: {
-      front: { alt: "Front of the Elite Rebuilt Inspections office", label: "Office front" },
-      bay: { alt: "Vehicle inspection area", label: "Inspection area" },
-      vin: { alt: "Checking a vehicle identification number", label: "VIN check" },
-      paperwork: { alt: "Vehicle title and parts receipts", label: "Title and paperwork" },
+      sign: {
+        alt: "White sedan parked beside the Elite Rebuilt Inspections State Certified sign",
+        label: "Our shop",
+      },
+      checking: {
+        alt: "Inspector checking the door frame of a blue convertible",
+        label: "Inspection in progress",
+      },
+      clipboard: {
+        alt: "Inspector with a clipboard next to a convertible in the inspection bay",
+        label: "Inspector",
+      },
+      engine: {
+        alt: "White Honda Civic Type R with the hood open for inspection",
+        label: "Engine bay check",
+      },
+      truck: {
+        alt: "Purple classic Chevrolet pickup in the inspection bay",
+        label: "Classic truck",
+      },
     },
   },
 
