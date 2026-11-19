@@ -73,8 +73,8 @@ export function HomePage({ t }: { t: Dict }) {
                   <Image
                     src="/images/flhsmv-logo.png"
                     alt="FLHSMV"
-                    width={506}
-                    height={206}
+                    width={88}
+                    height={36}
                     className="h-9 w-auto"
                     priority
                   />

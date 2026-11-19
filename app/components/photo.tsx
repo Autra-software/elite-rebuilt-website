@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import Image from "next/image";
+import sharp from "sharp";
 import { SHOW_PENDING } from "./pending";
 
 /*
@@ -24,6 +25,24 @@ const slotOf = (key: PhotoKey): Slot => photoSlots[key];
 
 const exists = (file: string) => fs.existsSync(path.join(process.cwd(), "public", file));
 
+// A ~300-byte blurred preview, built into the page at build time, shown while
+// the real photo loads.
+const blurCache = new Map<string, Promise<string | undefined>>();
+function blurFor(file: string) {
+  if (!blurCache.has(file)) {
+    blurCache.set(
+      file,
+      sharp(path.join(process.cwd(), "public", file))
+        .resize(16)
+        .webp({ quality: 40 })
+        .toBuffer()
+        .then((buf) => `data:image/webp;base64,${buf.toString("base64")}`)
+        .catch(() => undefined),
+    );
+  }
+  return blurCache.get(file)!;
+}
+
 export function slotHasImage(key: PhotoKey) {
   const slot = slotOf(key);
   return exists(slot.photo) || (!!slot.illustration && exists(slot.illustration));
@@ -40,7 +59,7 @@ type PhotoProps = {
   position?: string;
 };
 
-export function Photo({
+export async function Photo({
   photo,
   alt,
   label,
@@ -53,6 +72,7 @@ export function Photo({
   const slot = slotOf(photo);
 
   if (exists(slot.photo)) {
+    const blurDataURL = await blurFor(slot.photo);
     return (
       <div className={`relative overflow-hidden rounded-lg bg-mist ${className}`}>
         <Image
@@ -60,6 +80,8 @@ export function Photo({
           alt={alt}
           fill
           sizes={sizes}
+          placeholder={blurDataURL ? "blur" : "empty"}
+          blurDataURL={blurDataURL}
           className="object-cover"
           style={position ? { objectPosition: position } : undefined}
         />
