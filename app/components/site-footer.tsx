@@ -14,8 +14,8 @@ export function SiteFooter({ t }: { t: Dict }) {
           <Image
             src="/images/elite-logo-round.png"
             alt=""
-            width={64}
-            height={58}
+            width={56}
+            height={56}
             className="h-14 w-auto"
           />
           <div>

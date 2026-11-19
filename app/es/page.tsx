@@ -18,13 +18,13 @@ export const metadata: Metadata = {
     description: es.meta.description,
     locale: "es_US",
     alternateLocale: ["en_US"],
-    images: [{ url: "/images/elite-logo-round.png", alt: site.name }],
+    images: [{ url: "/images/og-image-es.jpg", width: 1200, height: 630, alt: site.name }],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: es.meta.title,
     description: es.meta.description,
-    images: ["/images/elite-logo-round.png"],
+    images: ["/images/og-image-es.jpg"],
   },
 };
 

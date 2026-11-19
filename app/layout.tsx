@@ -32,13 +32,13 @@ export const metadata: Metadata = {
     description: site.description,
     locale: "en_US",
     alternateLocale: ["es_US"],
-    images: [{ url: "/images/elite-logo-round.png", alt: site.name }],
+    images: [{ url: "/images/og-image-en.jpg", width: 1200, height: 630, alt: site.name }],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: site.title,
     description: site.description,
-    images: ["/images/elite-logo-round.png"],
+    images: ["/images/og-image-en.jpg"],
   },
   robots: { index: true, follow: true },
 };

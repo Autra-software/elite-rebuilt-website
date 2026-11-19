@@ -23,7 +23,7 @@ export function SiteHeader({ t, showBring }: { t: Dict; showBring: boolean }) {
           <Image
             src="/images/elite-logo-round.png"
             alt=""
-            width={44}
+            width={40}
             height={40}
             className="h-10 w-auto"
             priority
