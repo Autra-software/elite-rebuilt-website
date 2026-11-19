@@ -25,7 +25,7 @@ export function SiteHeader({ t, showBring }: { t: Dict; showBring: boolean }) {
             alt=""
             width={40}
             height={40}
-            className="h-10 w-auto"
+            className="h-10 w-10 object-contain"
             priority
           />
           <span className="font-display text-base font-bold leading-tight tracking-tight md:text-lg">

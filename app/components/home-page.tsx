@@ -75,7 +75,7 @@ export function HomePage({ t }: { t: Dict }) {
                     alt="FLHSMV"
                     width={88}
                     height={36}
-                    className="h-9 w-auto"
+                    className="h-9 w-[88px] object-contain"
                     priority
                   />
                 </span>

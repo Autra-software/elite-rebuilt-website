@@ -16,7 +16,7 @@ export function SiteFooter({ t }: { t: Dict }) {
             alt=""
             width={56}
             height={56}
-            className="h-14 w-auto"
+            className="h-14 w-14 object-contain"
           />
           <div>
             <p className="font-display text-lg font-bold">{site.name}</p>
