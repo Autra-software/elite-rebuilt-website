@@ -1,0 +1,29 @@
+# Only index the app code. Takes precedence over .gitignore.
+
+# Claude tooling and skills (not app code)
+.claude/
+skills-lock.json
+CLAUDE.md
+
+# Graphify output
+graphify-out/
+
+# Dependencies and build output
+node_modules/
+.next/
+out/
+build/
+coverage/
+
+# Static assets and generated files
+public/
+*.md
+package-lock.json
+next-env.d.ts
+*.tsbuildinfo
+.env*
+*.ico
+*.png
+*.jpg
+*.svg
+photo-originals/

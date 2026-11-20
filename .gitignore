@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# graphify output (machine-specific; rebuild locally with `graphify .`)
+/graphify-out/
+
+# original photos (unblurred, with metadata); only the web versions in public/ are published
+/photo-originals/
