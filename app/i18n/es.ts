@@ -63,20 +63,90 @@ export const es: Dict = {
 
   bring: {
     title: "Qué traer a su inspección",
-    intro: "Tenga esto listo para que su inspección no se retrase.",
-    items: [
-      { text: "El título de salvamento (salvage) del vehículo", pending: true },
-      {
-        text: "Recibos o facturas de compra de todas las piezas principales usadas en la reparación",
-        pending: true,
+    intro: "Responda hasta 3 preguntas rápidas para ver los documentos exactos para su vehículo.",
+    questions: {
+      who: {
+        label: "¿Quién trae el vehículo?",
+        options: {
+          dealer: { label: "Dealer", hint: "Concesionario con licencia" },
+          company: { label: "Compañía", hint: "Una empresa dueña del vehículo" },
+          private: { label: "Dueño privado", hint: "El vehículo está a su nombre" },
+        },
       },
-      { text: "Fotos del vehículo antes de la reparación", pending: true },
-      { text: "Su licencia de conducir o identificación estatal", pending: true },
-      {
-        text: "Los formularios estatales que le indiquemos al confirmar su cita",
-        pending: true,
+      first: {
+        label: "¿Es su primera inspección con nosotros?",
+        options: {
+          yes: { label: "Sí, primera vez", hint: "Registramos su negocio una sola vez" },
+          no: { label: "No, ya estamos registrados", hint: "Solo los documentos de este vehículo" },
+        },
       },
-    ],
+      auction: {
+        label: "¿La compañía compró este vehículo en una subasta?",
+        options: {
+          yes: { label: "Sí, en una subasta", hint: "" },
+          no: { label: "No", hint: "" },
+        },
+      },
+      accident: {
+        label: "¿El vehículo tuvo un accidente?",
+        options: {
+          yes: { label: "Sí, tuvo un accidente", hint: "" },
+          no: { label: "Sin accidente", hint: "Por ejemplo, lo compró con título salvage" },
+        },
+      },
+      repair: {
+        label: "¿Quién reparó el vehículo?",
+        options: {
+          self: { label: "Lo reparé yo mismo", hint: "" },
+          shop: { label: "Un body shop o taller", hint: "" },
+        },
+      },
+    },
+    docs: {
+      dealerLicense: { text: "Número de licencia de dealer (VI)", hint: "" },
+      resaleTax: { text: "Número de Resale tax (certificado de reventa)", hint: "" },
+      resaleTaxAuction: {
+        text: "Número de Resale tax (certificado de reventa)",
+        hint: "Necesario porque el vehículo se compró en una subasta.",
+      },
+      resaleTaxOnFile: {
+        text: "Número de Resale tax (certificado de reventa)",
+        hint: "Necesario para vehículos de subasta. No hace falta si ya lo tenemos registrado.",
+      },
+      ownerLicense: { text: "Licencia de conducir del dueño del negocio", hint: "" },
+      ein: { text: "Número EIN", hint: "Como aparece en Sunbiz." },
+      title: { text: "Título del vehículo", hint: "" },
+      billOfSale: { text: "Recibo de compra (Bill of Sale)", hint: "" },
+      partsReceipts: { text: "Recibos de las partes mayores reemplazadas", hint: "" },
+      titleOwnerOrInsurer: {
+        text: "Título a su nombre o el título enviado por el seguro",
+        hint: "",
+      },
+      accidentPhotos: {
+        text: "Fotos del accidente",
+        hint: "Impresas, o en su teléfono y se las imprimimos en la oficina.",
+      },
+      salvageTitle: { text: "Título salvage", hint: "" },
+      driverLicense: { text: "Su licencia de conducir", hint: "" },
+      workOrder: {
+        text: "Orden de trabajo (work order) del body shop o taller que hizo la reparación",
+        hint: "",
+      },
+    },
+    empty: "Elija una opción arriba para ver su lista.",
+    groups: {
+      registration: "Registro inicial",
+      registrationBadge: "Solo la primera vez",
+      vehicle: "Para este vehículo",
+    },
+    summaryOne: "Necesita 1 documento. Traiga el original.",
+    summaryMany: "Necesita {count} documentos. Traiga los originales.",
+    book: "Solicitar una inspección",
+    print: "Imprimir o guardar como PDF",
+    reset: "Empezar de nuevo",
+    allCases: "Ver todos los casos",
+    colCase: "Si usted es",
+    colDocs: "Traiga",
     note: "¿Tiene dudas sobre algún documento? Llámenos antes de su visita.",
   },
 

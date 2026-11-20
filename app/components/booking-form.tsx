@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useSyncExternalStore, type FormEvent } from "react";
+import { useBringAnswers } from "../lib/use-bring-answers";
 import type { Dict } from "../i18n/en";
 import { AppointmentPicker } from "./appointment-picker";
 import { checkVin, decodeVin, describeVehicle, normalizeVin, type VinCheck, type VinVehicle } from "../lib/vin";
@@ -30,6 +31,7 @@ function Required() {
 
 export function BookingForm({ t, dateLocale }: { t: Dict["request"]; dateLocale: string }) {
   const isClient = useIsClient();
+  const customerType = useBringAnswers().answers.who ?? "";
   const [preferredDate, setPreferredDate] = useState("");
   const [preferredTime, setPreferredTime] = useState("");
   const [dayError, setDayError] = useState(false);
@@ -240,6 +242,8 @@ export function BookingForm({ t, dateLocale }: { t: Dict["request"]; dateLocale:
       <input type="hidden" name="_subject" value={t.subject} />
       <input type="hidden" name="language" value={dateLocale} />
       <input type="hidden" name="vinCheck" value={vinCheck} />
+      {/* From the "What to bring" questions, when answered */}
+      <input type="hidden" name="customerType" value={customerType} />
       <input type="hidden" name="vehicleYear" value={vehicle?.year ?? ""} />
       <input type="hidden" name="vehicleMake" value={vehicle?.make ?? ""} />
       <input type="hidden" name="vehicleModel" value={vehicle?.model ?? ""} />

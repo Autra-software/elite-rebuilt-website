@@ -148,3 +148,21 @@ details[open] .faq-icon {
   border-radius: 9999px;
   background: var(--color-flag);
 }
+
+/* "Print or save as PDF" in What to bring: the PDF holds only the checklist card. */
+@media print {
+  html.print-bring body *:not(:has(#bring-checklist)):not(#bring-checklist):not(#bring-checklist *) {
+    display: none !important;
+  }
+  html.print-bring *:has(#bring-checklist) {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    background: none !important;
+  }
+  html.print-bring #bring-checklist {
+    max-width: none;
+    box-shadow: none;
+  }
+}

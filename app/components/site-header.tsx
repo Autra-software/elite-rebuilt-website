@@ -3,9 +3,9 @@ import Link from "next/link";
 import type { Dict } from "../i18n/en";
 import { site } from "../site";
 
-export function SiteHeader({ t, showBring }: { t: Dict; showBring: boolean }) {
+export function SiteHeader({ t }: { t: Dict }) {
   const nav = [
-    ...(showBring ? [{ href: "#what-to-bring", label: t.nav.bring }] : []),
+    { href: "#what-to-bring", label: t.nav.bring },
     { href: "#how-it-works", label: t.nav.how },
     { href: "#questions", label: t.nav.faq },
   ];

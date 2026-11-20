@@ -62,20 +62,90 @@ export const en = {
 
   bring: {
     title: "What to bring to your inspection",
-    intro: "Have these ready so your inspection isn't delayed.",
-    items: [
-      { text: "The vehicle's salvage title", pending: true },
-      {
-        text: "Receipts or bills of sale for all major parts used in the repair",
-        pending: true,
+    intro: "Answer up to 3 quick questions to see the exact documents for your vehicle.",
+    questions: {
+      who: {
+        label: "Who is bringing the vehicle?",
+        options: {
+          dealer: { label: "Dealer", hint: "Licensed car dealer" },
+          company: { label: "Company", hint: "A business that owns the vehicle" },
+          private: { label: "Private owner", hint: "The vehicle is in your name" },
+        },
       },
-      { text: "Photos of the vehicle before it was repaired", pending: true },
-      { text: "Your driver license or state ID", pending: true },
-      {
-        text: "The state forms we tell you to complete when we confirm your appointment",
-        pending: true,
+      first: {
+        label: "Is this your first inspection with us?",
+        options: {
+          yes: { label: "Yes, first time", hint: "We register your business once" },
+          no: { label: "No, already registered", hint: "Just this vehicle's documents" },
+        },
       },
-    ],
+      auction: {
+        label: "Did the company buy this vehicle at an auction?",
+        options: {
+          yes: { label: "Yes, at an auction", hint: "" },
+          no: { label: "No", hint: "" },
+        },
+      },
+      accident: {
+        label: "Was the vehicle in an accident?",
+        options: {
+          yes: { label: "Yes, it was in an accident", hint: "" },
+          no: { label: "No accident", hint: "For example, you bought it with a salvage title" },
+        },
+      },
+      repair: {
+        label: "Who repaired the vehicle?",
+        options: {
+          self: { label: "I repaired it myself", hint: "" },
+          shop: { label: "A body shop or garage", hint: "" },
+        },
+      },
+    },
+    docs: {
+      dealerLicense: { text: "Dealer license number (VI)", hint: "" },
+      resaleTax: { text: "Resale tax certificate number", hint: "" },
+      resaleTaxAuction: {
+        text: "Resale tax certificate number",
+        hint: "Needed because the vehicle was bought at an auction.",
+      },
+      resaleTaxOnFile: {
+        text: "Resale tax certificate number",
+        hint: "Needed for auction vehicles. Skip it if we already have it on file.",
+      },
+      ownerLicense: { text: "Driver license of the business owner", hint: "" },
+      ein: { text: "EIN number", hint: "As it appears on Sunbiz." },
+      title: { text: "Vehicle title", hint: "" },
+      billOfSale: { text: "Bill of sale", hint: "" },
+      partsReceipts: { text: "Receipts for the major parts replaced", hint: "" },
+      titleOwnerOrInsurer: {
+        text: "Title in your name, or the title sent by your insurance company",
+        hint: "",
+      },
+      accidentPhotos: {
+        text: "Photos of the accident damage",
+        hint: "Printed, or on your phone and we'll print them at the office.",
+      },
+      salvageTitle: { text: "Salvage title", hint: "" },
+      driverLicense: { text: "Your driver license", hint: "" },
+      workOrder: {
+        text: "Work order from the body shop or garage that did the repair",
+        hint: "",
+      },
+    },
+    empty: "Choose an option above to see your list.",
+    groups: {
+      registration: "One-time registration",
+      registrationBadge: "First visit only",
+      vehicle: "For this vehicle",
+    },
+    summaryOne: "You need 1 document. Bring the original.",
+    summaryMany: "You need {count} documents. Bring the originals.",
+    book: "Request an inspection",
+    print: "Print or save as PDF",
+    reset: "Start over",
+    allCases: "See every case",
+    colCase: "If you are",
+    colDocs: "Bring",
     note: "Not sure about a document? Call us before your visit.",
   },
 

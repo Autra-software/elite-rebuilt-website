@@ -6,6 +6,7 @@ import { PendingTag, SHOW_PENDING, visible } from "./pending";
 import { Photo, slotHasImage, type PhotoKey } from "./photo";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
+import { WhatToBring } from "./what-to-bring";
 
 const mapsQuery = encodeURIComponent(
   `${site.address.street} ${site.address.city} ${site.address.region} ${site.address.postalCode}`,
@@ -53,15 +54,13 @@ const photoLayout = {
 };
 
 export function HomePage({ t }: { t: Dict }) {
-  const bringItems = visible(t.bring.items);
-  const showBring = bringItems.length > 0;
   const faqItems = visible(t.faq.items);
   const showOffice = SHOW_PENDING || officePhotos.some(({ key }) => slotHasImage(key));
   const a = site.address;
 
   return (
     <div lang={t.locale} className="flex min-h-full flex-1 flex-col pb-[4.5rem] md:pb-0">
-      <SiteHeader t={t} showBring={showBring} />
+      <SiteHeader t={t} />
 
       <main id="main" className="flex-1">
         {/* Hero: who we are, the one main action, and how to find us */}
@@ -156,44 +155,12 @@ export function HomePage({ t }: { t: Dict }) {
           </div>
         </section>
 
-        {/* What to bring: styled like an official checklist form */}
-        {showBring && (
-          <section id="what-to-bring" className="bg-mist">
-            <div className="mx-auto max-w-6xl px-5 py-14 md:py-20">
-              <div className="mx-auto max-w-3xl rounded-sm border border-ink bg-white shadow-[6px_6px_0_0_var(--color-ink)]">
-                <div className="border-b-4 border-double border-ink px-6 py-5 md:px-10">
-                  <h2 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
-                    {t.bring.title}
-                  </h2>
-                  <p className="mt-1 text-base text-steel">{t.bring.intro}</p>
-                </div>
-                <ul className="px-6 py-4 md:px-10">
-                  {bringItems.map((item) => (
-                    <li
-                      key={item.text}
-                      className="flex items-start gap-4 border-b border-dashed border-field py-4 last:border-b-0"
-                    >
-                      <span
-                        aria-hidden="true"
-                        className="mt-0.5 h-6 w-6 shrink-0 rounded-[3px] border-2 border-ink"
-                      />
-                      <span className="text-base leading-7">
-                        {item.text}
-                        {item.pending && <PendingTag label={t.pending} />}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-                <p className="border-t border-ink bg-mist px-6 py-4 text-sm font-semibold md:px-10">
-                  {t.bring.note}{" "}
-                  <a href={`tel:${site.phone}`} className="underline underline-offset-4">
-                    {site.phoneDisplay}
-                  </a>
-                </p>
-              </div>
-            </div>
-          </section>
-        )}
+        {/* What to bring: a few questions, then the exact checklist for that customer */}
+        <section id="what-to-bring" className="bg-mist">
+          <div className="mx-auto max-w-6xl px-5 py-14 md:py-20">
+            <WhatToBring t={t.bring} phone={site.phone} phoneDisplay={site.phoneDisplay} />
+          </div>
+        </section>
 
         {/* How it works: a real sequence, so it is numbered */}
         <section id="how-it-works">
